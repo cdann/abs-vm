@@ -1,5 +1,8 @@
 #include "FactoryOperand.hpp"
 #include <iostream>
+# include "OperandInt8.hpp"
+# include "OperandInt16.hpp"
+# include "OperandInt32.hpp"
 
 FactoryOperand	FactoryOperand::Factory;
 
@@ -25,124 +28,104 @@ std::ostream	&operator<<(std::ostream &o, FactoryOperand const &rhs) {
 	o << "plop" << std::endl;
 	return o;
 }
-OperandInt16 *FactoryOperand::makeInt16()
+IOperand *FactoryOperand::makeInt16()
 {
 	return new OperandInt16();
 }
 
-OperandInt16 *FactoryOperand::makeInt16(std::string val)
+IOperand *FactoryOperand::createInt16(std::string val)
 {
 	return new OperandInt16(val);
 }
-OperandInt16 *FactoryOperand::makeInt16(double val)
+IOperand *FactoryOperand::makeInt16(double val)
 {
 	return new OperandInt16(val);
 }
 
-OperandInt8 *FactoryOperand::makeInt8()
+IOperand *FactoryOperand::makeInt8()
 {
 	return new OperandInt8();
 }
 
-OperandInt8 *FactoryOperand::makeInt8(std::string val)
+IOperand *FactoryOperand::createInt8(std::string val)
 {
+	std::cout << "rfeu9ho" << std::endl;
 	return new OperandInt8(val);
 }
-OperandInt8 *FactoryOperand::makeInt8(double val)
+IOperand *FactoryOperand::makeInt8(double val)
 {
 	return new OperandInt8(val);
 }
 
-OperandInt32 *FactoryOperand::makeInt32()
+IOperand *FactoryOperand::makeInt32()
 {
 	return new OperandInt32();
 }
 
-OperandInt32 *FactoryOperand::makeInt32(std::string val)
+IOperand *FactoryOperand::createInt32(std::string val)
 {
 	return new OperandInt32(val);
 }
-OperandInt32 *FactoryOperand::makeInt32(double val)
+IOperand *FactoryOperand::makeInt32(double val)
 {
 	return new OperandInt32(val);
 }
 
 IOperand *FactoryOperand::make(eOperandType op)
 {
-	//t_ope instr[] = {&FactoryOperand::createInt8, &FactoryOperand::createInt16, &FactoryOperand::createInt32, &FactoryOperand::createFloat, &FactoryOperand::createDouble};
+std::cout << "PEK";
+
+	//t_ope instr[] = {&FactoryOperand::createInt8, &FactoryOperand::createInt16, &FactoryOperand::createInt32/*, &FactoryOperand::createFloat, &FactoryOperand::createDouble*/};
 	t_ope instr[] = {&FactoryOperand::makeInt8, &FactoryOperand::makeInt16, &FactoryOperand::makeInt32,/* &FactoryOperand::makeFloat, &FactoryOperand::makeDouble*/};
 
 	eOperandType instr_n[] = {INT8, INT16, INT32, FLOAT, DOUBLE};
 
-	switch(op)
+	for(int i = 0; i < 3; i++)
 	{
-		case(INT32):
-			return this->makeInt32();
-		break;
-		case(INT16):
-			return this->makeInt16();
-		break;
-		case(INT8):
-			return this->makeInt8();
-		break;
-		case(FLOAT):
-			return this->makeInt8();
-		break;
-		case(DOUBLE):
-			return this->makeInt8();
-		break;
+		if (op == instr_n[i])
+			return (this->*instr[i])();
 	}
+	return NULL;
 }
 
 IOperand *FactoryOperand::make(eOperandType op, std::string val)
 {
-	t_opestr instr[] = {&FactoryOperand::makeInt8, &FactoryOperand::makeInt16, &FactoryOperand::makeInt32,/* &FactoryOperand::makeFloat, &FactoryOperand::makeDouble*/};
+	t_opestr instr[] = {&FactoryOperand::createInt8, &FactoryOperand::createInt16, &FactoryOperand::createInt32,/* &FactoryOperand::makeFloat, &FactoryOperand::makeDouble*/};
 
 	eOperandType instr_n[] = {INT8, INT16, INT32, FLOAT, DOUBLE};
-
-	switch(op)
+	for(int i = 0; i < 3; i++)
 	{
-		case(INT32):
-			return this->makeInt32(val);
-		break;
-		case(INT16):
-			return this->makeInt16(val);
-		break;
-		case(INT8):
-			return this->makeInt8(val);
-		break;
-		case(FLOAT):
-			return this->makeInt8(val);
-		break;
-		case(DOUBLE):
-			return this->makeInt8(val);
-		break;
+std::cout << op << "LOL" << instr_n[i];
+		if (op == instr_n[i])
+			return (this->*instr[i])(val);
 	}
+	return NULL;
 }
 
 IOperand *FactoryOperand::make(eOperandType op, double val)
 {
-	t_opedouble instr[] = {&FactoryOperand::makeInt8, &FactoryOperand::makeInt16, &FactoryOperand::makeInt32,/* &FactoryOperand::makeFloat, &FactoryOperand::makeDouble*/};
+std::cout << "PUK";
 
+	t_opedouble instr[] = {&FactoryOperand::makeInt8, &FactoryOperand::makeInt16, &FactoryOperand::makeInt32,/* &FactoryOperand::makeFloat, &FactoryOperand::makeDouble*/};
 	eOperandType instr_n[] = { INT8, INT16, INT32, FLOAT, DOUBLE };
 
-	switch(op)
+	for(int i = 0; i < 3; i++)
 	{
-		case(INT32):
-			return this->makeInt32(val);
-		break;
-		case(INT16):
-			return this->makeInt16(val);
-		break;
-		case(INT8):
-			return this->makeInt8(val);
-		break;
-		case(FLOAT):
-			return this->makeInt8(val);
-		break;
-		case(DOUBLE):
-			return this->makeInt8(val);
-		break;
+		if (op == instr_n[i])
+			return (this->*instr[i])(val);
 	}
+	return NULL;
 }
 
+//IOperand *FactoryOperand::make(std::string)
+//{
+//	t_opedouble instr[] = {&FactoryOperand::makeInt8, &FactoryOperand::makeInt16, &FactoryOperand::makeInt32,/* &FactoryOperand::makeFloat, &FactoryOperand::makeDouble*/};
+//	eOperandType instr_n[] = { INT8, INT16, INT32, FLOAT, DOUBLE };
+//
+//	for(int i = 0; i < 3; i++)
+//	{
+//		if (op == instr_n[i])
+//			return (this->*instr[i])(val);
+//	}
+//	return NULL;
+//}

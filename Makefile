@@ -6,21 +6,24 @@
 #    By: cdannapp <cdannapp@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/02/16 21:34:00 by cdannapp          #+#    #+#              #
-#    Updated: 2014/03/27 20:34:59 by cdannapp         ###   ########.fr        #
+#    Updated: 2015/05/20 16:33:52 by cdannapp         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
 NAME = AbstractVM
 
-SRC =	Operand/FactoryOperand.cpp \
-		Operand/OperandInt16.cpp \
-		conversion.cpp \
+SRC =	Operands/FactoryOperand.cpp \
+		Operands/OperandInt8.cpp \
+		Operands/OperandInt16.cpp \
+		Operands/OperandInt32.cpp \
+		ToolBox.cpp \
 		LineManager.cpp \
-		OperandException.cpp \
+		Exceptions/OperandException.cpp \
+		Exceptions/SyntaxeException.cpp \
+		Exceptions/StackException.cpp \
+		test.cpp
 
 CFLAGS = -Wall -Werror -Wextra
-
-
 
 OBJ = $(SRC:.cpp=.o)
 
@@ -29,7 +32,6 @@ INCLUDE = -I Operands -I Exceptions -I .
 all : $(NAME)
 
 %.o:%.cpp
-	echo "hello"
 	clang++ -Wall -Wextra -Werror -c -o $@ $^ $(INCLUDE)
 
 $(NAME): $(OBJ)
@@ -43,5 +45,3 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-
-

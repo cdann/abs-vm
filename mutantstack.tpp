@@ -7,49 +7,32 @@ template <typename T>
 class MutantStack : public std::stack<T>
 {
 	public:
+		typedef typename std::deque<T>::iterator iterator;
+
 		MutantStack<T>(void) : std::stack<T>()
 		{}
 
-		template <typename C>
-		MutantStack<T>(C &src) : std::stack<T>(src)
-		{}
-
-
+		MutantStack<T>(MutantStack<T> &src) : std::stack<T>(src)
+		{
+			*this = src;
+		}
 
 		~MutantStack<T>(void)
 		{}
 
 		MutantStack<T>&		operator=(const MutantStack<T> & op )
 		{
+			std::stack<T>::operator=(op);
 			return (*this);
 		}
 
-		class iterrator
-		{
-			public:
-				iterrator()
-				{}
+		iterator begin(){
+			return this->c.begin();
+		}
 
-				iterrator(MutantStack<T>::iterrator const &src)
-				{
-					*this = src;
-				}
-
-				MutantStack<T>::iterrator	operator=(const MutantStack<T>::iterrator & op )
-				{
-					return *this;
-				}
-
-				~iterrator()
-				{}
-
-				T *ptr;
-
-		};
-
-	private:
-		MutantStack<T>::iterrator begin;
-		MutantStack<T>::iterrator end;
+		iterator end(){
+			return this->c.end();
+		}
 };
 
 #endif

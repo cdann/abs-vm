@@ -4,48 +4,54 @@
 # include <iostream>
 # include <sstream>
 # include "MutantStack.tpp"
-# include "IOperand.tpp"
+# include "IOperand.hpp"
+# include <list>
+# include <string>
 
 
 
 class LineManager {
 
 	public:
+		static std::string	getNline();
+
 		LineManager();
 		LineManager(LineManager const &);
 		virtual ~LineManager();
-		LineManager			&operator=(LineManager const &);
 
-		void parseLine(std::string str);
-		static std::string getNline();
-		std::string 	getLine() const;
+		LineManager			&operator=(LineManager const &);
+		void 				parseLine(std::string str);
+		IOperand			*parseOperand();
+		std::string 		getLine() const;
 
 		//static LineManager	Manager;
 
 	private:
 		static int				nline;
+		static bool				isOn;
+
 		std::string				line;
-		MutantStack<IOperand*>	*stack;
-		std::vector<std::string> args;
+		MutantStack<const IOperand*>	*stack;
+		std::list<std::string> args;
 
 		bool		searchInstruct(std::string);
-
-		void		push(std::string &);
-		void		pop(std::string &);
-		void		mul(std::string &);
-		void		my_div(std::string &);
-		void		mod(std::string &);
-		void		print(std::string &);
-		void		my_exit(std::string &);
-		void		my_assert(std::string &);
-		void		dump(std::string &);
-		void		add(std::string &);
-		void		sub(std::string &);
+		void		push();
+		void		pop();
+		void		mul();
+		void		my_div();
+		void		mod();
+		void		print();
+		void		my_exit();
+		void		my_assert();
+		void		dump();
+		void		add();
+		void		sub();
 
 
 };
 
 typedef void (LineManager::*t_instruct)();
+//typedef IOperand* (FactoryOperand::*t_opestr)(std::string);
 
 std::ostream		&operator<<(std::ostream &, LineManager const &);
 

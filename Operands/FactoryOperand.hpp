@@ -6,7 +6,6 @@
 # include "OperandInt32.hpp"
 # include <map>
 
-//enum Oper{INTx32, INT, FLOAT, DOUBLE, NOTFOUND};
 
 class FactoryOperand
 {
@@ -18,20 +17,21 @@ class FactoryOperand
 		IOperand		*make(eOperandType op, std::string val);
 		IOperand		*make(eOperandType op, double val);
 		IOperand		*make(eOperandType op);
+		//IOperand		*make(std::string str);
 		static FactoryOperand	Factory;
 
 	private:
-		OperandInt32			*makeInt32();
-		OperandInt32			*makeInt32(std::string val);
-		OperandInt32			*makeInt32(double val);
+		IOperand			*makeInt32();
+		IOperand			*createInt32(std::string val);
+		IOperand			*makeInt32(double val);
 
-		OperandInt16			*makeInt16();
-		OperandInt16			*makeInt16(std::string val);
-		OperandInt16			*makeInt16(double val);
+		IOperand			*makeInt16();
+		IOperand			*createInt16(std::string val);
+		IOperand			*makeInt16(double val);
 
-		OperandInt8				*makeInt8();
-		OperandInt8				*makeInt8(std::string val);
-		OperandInt8				*makeInt8(double val);
+		IOperand			*makeInt8();
+		IOperand			*createInt8(std::string val);
+		IOperand			*makeInt8(double val);
 
 
 };
