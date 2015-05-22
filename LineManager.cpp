@@ -76,19 +76,15 @@ void 	LineManager::parseLine(std::string str)
 	for(std::list<std::string>::iterator it = this->args.begin() ; it != this->args.end() ; it++ )
 		std::cout << *it << " // ";
 	std::cout  << std::endl;
-	//std::cout << this->args.size() << std::endl;
 	if (this->args.size() > 2 || this->args.size() == 0)
 		throw SyntaxeException();
 	for(int i = 0; i < 11; i++)
 	{
 		if (this->args.front() == instr_n[i])
 		{
-			//write(1, "#" , 1);
-			//std::cout << "pop";
 			(this->*instr[i])();
 		}
 	}
-	std::cout << "plouf";
 }
 
 IOperand	*LineManager::parseOperand()
