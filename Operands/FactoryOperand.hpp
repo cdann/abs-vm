@@ -1,9 +1,10 @@
 #ifndef OPEFACT_H
 # define OPEFACT_H
 # include "IOperand.hpp"
-# include "OperandInt8.hpp"
-# include "OperandInt16.hpp"
-# include "OperandInt32.hpp"
+
+//# include "OperandInt8.hpp"
+//# include "OperandInt16.hpp"
+//# include "OperandInt32.hpp"
 # include <map>
 
 
@@ -32,6 +33,14 @@ class FactoryOperand
 		IOperand			*makeInt8();
 		IOperand			*createInt8(std::string val);
 		IOperand			*makeInt8(double val);
+
+		IOperand			*makeFloat();
+		IOperand			*createFloat(std::string val);
+		IOperand			*makeFloat(double val);
+
+		IOperand			*makeDouble();
+		IOperand			*createDouble(std::string val);
+		IOperand			*makeDouble(double val);
 
 
 };

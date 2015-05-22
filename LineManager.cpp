@@ -2,8 +2,10 @@
 #include "FactoryOperand.hpp"
 #include "SyntaxeException.hpp"
 #include "StackException.hpp"
+#include "AssertException.hpp"
 #include <list>
 #include "ToolBox.hpp"
+
 
 //LineManager	LineManager::Manager;
 int				LineManager::nline = 0;
@@ -69,20 +71,24 @@ void 	LineManager::parseLine(std::string str)
 	t_instruct instr[] = {&LineManager::push, &LineManager::pop, &LineManager::mul, &LineManager::my_div, &LineManager::mod, &LineManager::print, &LineManager::my_exit, &LineManager::my_assert, &LineManager::dump, &LineManager::add, &LineManager::sub,};
 	std::string instr_n[] = {"push", "pop", "mul", "div", "mod", "print", "my_exit", "assert", "dump", "add", "sub"};
 
-		//std::cout << "plouf";
+	LineManager::nline ++;
 	this->args = ToolBox::split(str, ' ');
-		std::cout << str << std::endl;
 	for(std::list<std::string>::iterator it = this->args.begin() ; it != this->args.end() ; it++ )
 		std::cout << *it << " // ";
+	std::cout  << std::endl;
+	//std::cout << this->args.size() << std::endl;
 	if (this->args.size() > 2 || this->args.size() == 0)
 		throw SyntaxeException();
-	if (this->args.size() == 1)
-		this->args.push_back("");
 	for(int i = 0; i < 11; i++)
 	{
 		if (this->args.front() == instr_n[i])
+		{
+			//write(1, "#" , 1);
+			//std::cout << "pop";
 			(this->*instr[i])();
+		}
 	}
+	std::cout << "plouf";
 }
 
 IOperand	*LineManager::parseOperand()
@@ -102,8 +108,9 @@ IOperand	*LineManager::parseOperand()
 		part[0] = arg.substr(0, found );
 		part[1] = arg.substr(found + 1, arg.size() - found -2);
 	}
+	//std::cout << ">>" << part[1] << "<<" << std::endl;
 
-	std::string instr[] = {"Int8", "Int16", "Int32","Float", "Double"};
+	std::string instr[] = {"int8", "int16", "int32","float", "double"};
 	eOperandType instr_n[] = { INT8, INT16, INT32, FLOAT, DOUBLE };
 	for(int i = 0; i < 5; i++)
 	{
@@ -111,7 +118,7 @@ IOperand	*LineManager::parseOperand()
 			type = instr_n[i];
 	}
 	//ret = FactoryOperand::Factory.make(INT8, "4");
-	return (FactoryOperand::Factory.make(type, "4"));
+	return (FactoryOperand::Factory.make(type, part[1]));
 }
 
 /*--------------------------------------------------------*/
@@ -201,6 +208,7 @@ void		LineManager::add()
 		throw StackException();
 	if (this->args.size() > 1)
 		throw SyntaxeException();
+	//std::cout << "AVANr";
 	a = this->stack->top();
 	this->stack->pop();
 	b = this->stack->top();
@@ -217,22 +225,30 @@ void		LineManager::dump()
 		throw StackException();
 	if (this->args.size() > 1)
 		throw SyntaxeException();
-	a = this->stack->top();
-	this->stack->pop();
-	std::cout << a->toString() << std::endl;
+	for (MutantStack<const IOperand*>::iterator it = this->stack->begin(); it != this->stack->end(); it++)
+	{
+		a = *it;
+		std::cout << a->toString() << std::endl;
+	}
+	//this->stack->pop();
 }
 
 void		LineManager::print()
 {
+
 	const IOperand *a;
+
+	//std::cout <<"bammmm";
 
 	if (this->stack->size() < 1)
 		throw StackException();
 	if (this->args.size() > 1)
+	{
 		throw SyntaxeException();
+	}
 	a = this->stack->top();
-	this->stack->pop();
 	std::cout << a->toString() << std::endl;
+			//write(1, "!" , 1);
 }
 
 void		LineManager::my_exit()
@@ -246,16 +262,21 @@ void		LineManager::my_exit()
 
 void		LineManager::push()
 {
-	std::cout << "#";
-	parseOperand();
+	this->stack->push(parseOperand());
 }
 
 void		LineManager::pop()
 {
-	parseOperand();
+	this->stack->pop();
 }
 
 void		LineManager::my_assert()
 {
-	parseOperand();
+	const IOperand *tmp;
+	const IOperand *first;
+
+	tmp = parseOperand();
+	first = this->stack->top();
+	if (first->toString() != tmp->toString())
+		throw AssertException();
 }

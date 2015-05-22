@@ -4,7 +4,6 @@
 # include <stdexcept>
 
 
-
 class SyntaxeException: public std::exception
 {
 	public:
