@@ -7,7 +7,7 @@ namespace ToolBox{
 	double						toDouble(std::string str);
 	std::list<std::string>	split(std::string str, char c);
 	void						trim(std::string & str);
-	bool						isdigit(std::string str);
+	bool						isdigit(std::string str, bool b);
 	bool						isonlyspace(std::string str);
 
 	template < typename T>

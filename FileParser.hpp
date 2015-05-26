@@ -14,7 +14,7 @@ public:
 	FileParser(FileParser const &);
 	virtual ~FileParser();
 	void check();
-	std::string			getLine();
+	int			getLine(std::string& li);
 	FileParser			&operator=(FileParser const &);
 
 private:

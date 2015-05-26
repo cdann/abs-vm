@@ -9,16 +9,16 @@ const char* OperandException::what() const throw()
 	switch(err)
 	{
 		case(MOD_ERR):
-			error += " modulo by 0.\n";
+			error += " modulo by 0.";
 			break;
 		case(DIV_ERR):
-			error += " division by 0.\n";
+			error += " division by 0.";
 			break;
 		case(OVER_ERR):
-			error += " overflow error.\n";
+			error += " overflow error.";
 			break;
 		case(UNDER_ERR):
-			error += " underflow error.\n";
+			error += " underflow error.";
 			break;
 	}
 

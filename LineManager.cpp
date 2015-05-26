@@ -4,10 +4,11 @@
 #include "StackException.hpp"
 #include "AssertException.hpp"
 #include <list>
+#include <vector>
 #include "ToolBox.hpp"
 
 
-//LineManager	LineManager::Manager;
+//FactoryOperand	LineManager::Factor;
 int				LineManager::nline = 0;
 bool			LineManager::isOn = true;
 /*--------------------------------------------------------*/
@@ -252,6 +253,13 @@ void		LineManager::my_exit()
 	LineManager::isOn = false;
 }
 
+void		LineManager::pop()
+{
+	if (this->stack->size() < 1)
+		throw StackException();
+	this->stack->pop();
+}
+
 /*--------------------------------------------------------*/
 /*               Instruction sans Argument                */
 /*--------------------------------------------------------*/
@@ -261,18 +269,23 @@ void		LineManager::push()
 	this->stack->push(parseOperand());
 }
 
-void		LineManager::pop()
-{
-	this->stack->pop();
-}
 
 void		LineManager::my_assert()
 {
-	const IOperand *tmp;
-	const IOperand *first;
+	int i = 0;
+	eOperandType func_n[] = {INT8, INT16, INT32, FLOAT, DOUBLE};
+	t_cast func[] = {&FactoryOperand::compareInt8, &FactoryOperand::compareInt16, &FactoryOperand::compareInt32, &FactoryOperand::compareFloat, &FactoryOperand::compareDouble};
+	IOperand* tmp = parseOperand();
+	IOperand* first = const_cast<IOperand*>(this->stack->top());
 
-	tmp = parseOperand();
-	first = this->stack->top();
-	if (first->toString() != tmp->toString())
-		throw AssertException();
+//std::cout << (first->getType() == tmp->getType()) << std::endl;
+	while (i < 5)
+	{
+		if (func_n[i] == first->getType() && (first->getType() != tmp->getType() || !(*func[i])(tmp, first)))
+		{
+			throw AssertException();
+		}
+		i++;
+	}
 }
+

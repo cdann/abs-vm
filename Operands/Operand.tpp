@@ -7,8 +7,12 @@
 # include <sstream>
 # include <iostream>
 # include <string>
+# include <limits>       // std::numeric_limits
 
 #include "OperandException.hpp"
+#include "SyntaxeException.hpp"
+
+//class FactoryOperand;
 
 template <typename T>
 class Operand : public IOperand
@@ -35,6 +39,30 @@ class Operand : public IOperand
 			return *this;
 		}
 
+		void  checkLimit(double d)
+		{
+			//std::cout << this->type << " " << static_cast<double>(std::numeric_limits<T>::min()) << " <-> " << static_cast<double>(std::numeric_limits<T>::max()) << std::endl;
+			if (d < std::numeric_limits<T>::min())
+				throw OperandException(UNDER_ERR);
+			if (d > std::numeric_limits<T>::max())
+				throw OperandException(OVER_ERR);
+		}
+
+		void  checkDigit(std::string d)
+		{
+			if (!ToolBox::isdigit(d, false))
+			{
+				std::cout << "FALSE";
+				throw SyntaxeException();
+			}
+		}
+
+		bool  operator==(Operand<T> const & rhs ) const // Sum
+		{
+			if (this->value == rhs.value)
+				return true;
+			return false;
+		}
 
 		IOperand const * operator+( IOperand const & rhs ) const // Sum
 		{
@@ -121,6 +149,11 @@ class Operand : public IOperand
 			return this->type;
 		}
 
+		T	 getvalue( void ) const // Type of the instance
+		{
+			return this->value;
+		}
+
 	private:
 		int const			precision;
 		eOperandType const	type;
@@ -128,15 +161,17 @@ class Operand : public IOperand
 		std::string			string;
 
 
-		static T fromString(std::string str)
+		T fromString(std::string str)
 		{
 			double	v;
 
+			this->checkDigit(str);
 			v = ToolBox::toDouble(str);
+			this->checkLimit(v);
 			return (static_cast<T>(v));
 		}
 
-		static std::string fromValue(T val)
+		std::string fromValue(T val)
 		{
 			std::stringstream ss;
 			std::string s;
@@ -152,13 +187,13 @@ class Operand : public IOperand
 
 			ss << val;
 			this->string = ss.str();
-			this->value = fromString(string);
+			this->value = this->fromString(string);
 		}
 
 		void	init(std::string val)
 		{
 			this->string = val;
-			this->value = fromString(val);
+			this->value = this->fromString(val);
 		}
 
 };
@@ -276,6 +311,12 @@ std::ostream		&operator<<(std::ostream &o, Operand<float> const &rhs)
 	return o;
 }
 
+template <>
+void  Operand<float>::checkDigit(std::string d)
+{
+	if (!ToolBox::isdigit(d, 1))
+		throw SyntaxeException();
+}
 
 
 /*--------------------------------------------------------*/
@@ -307,5 +348,11 @@ std::ostream		&operator<<(std::ostream &o, Operand<double> const &rhs)
 	return o;
 }
 
+template <>
+void  Operand<double>::checkDigit(std::string d)
+{
+	if (!ToolBox::isdigit(d, 1))
+		throw SyntaxeException();
+}
 
 #endif

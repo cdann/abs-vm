@@ -1,32 +1,49 @@
 #include "FileParser.hpp"
+#include "FileException.hpp"
 #include <fstream>
 #include <string>
 #include <iostream>
 
 FileParser::FileParser() {
 	std::string 	buffer;
+	bool			e;
 
 	while (getline(std::cin, buffer) && buffer != ";;")
 	{
 		this->lines.push_back(buffer);
+		if (buffer == "exit")
+			e = true;
 	}
+	if (!e)
+		throw FileException(EXIT_ERR);
 }
 
 FileParser::FileParser(char *f) {
-	std::string 	file(f);
-	std::ifstream	filesrc;
+	//std::string 	file(f);
+	//std::ifstream	filesrc;
 	std::string 	buffer;
+	bool 	e;
+	//std::cout << "<< |" << f << "|" << std::endl;
 
-
-	filesrc.open (file.data(), std::ifstream::in);
+	std::ifstream filesrc(f, std::ios::in);
 	if (filesrc)
 	{
+	//std::cout<< "bim";
 		while (getline(filesrc, buffer))
 		{
-			this->lines.push_back(buffer);
+			if (buffer[0] != '\0' && buffer[0] != ';')
+			{
+				this->lines.push_back(buffer);
+				if (buffer == "exit")
+					e = true;
+			}
 		}
 		filesrc.close();
 	}
+	else
+		throw FileException(FILENAME_ERR);
+	if (!e)
+		throw FileException(EXIT_ERR);
 }
 
 
@@ -43,15 +60,13 @@ FileParser				&FileParser::operator=(FileParser const &rhs) {
 	return *this;
 }
 
-std::string			FileParser::getLine()
+int			FileParser::getLine(std::string & line)
 {
-	std::string line;
-
 	if (this->lines.size() == 0)
-		return NULL;
+		return 0;
 	line = this->lines.front();
 	this->lines.pop_front();
-	return (line);
+	return (1);
 }
 
 

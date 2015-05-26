@@ -56,7 +56,7 @@ void ToolBox::trim(std::string & str)
 	str = str.substr(start, str.length() - end - start);
 }
 
-bool ToolBox::isdigit(std::string str)
+bool ToolBox::isdigit(std::string str, bool deci)
 {
 	bool point = false;
 	bool in = false;
@@ -65,7 +65,7 @@ bool ToolBox::isdigit(std::string str)
 	{
 		if (in == false && (*it >= '0' && *it <= '9'))
 			in = true;
-		if (!((*it >= '0' && *it <= '9') || (*it == '.' && !point)
+		if (!((*it >= '0' && *it <= '9') || (*it == '.' && !point && deci == true)
 			|| (*it == '-' && in == false) || (*it == '+' && in == false) || *it == ' '))
 			return false;
 		if (*it == ' ' && *(it - 1) != '-' && *(it - 1) != '+')

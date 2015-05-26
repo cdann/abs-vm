@@ -1,12 +1,16 @@
 #ifndef OPEFACT_H
 # define OPEFACT_H
 # include "IOperand.hpp"
+//#include "Operand.tpp"
 
 //# include "OperandInt8.hpp"
 //# include "OperandInt16.hpp"
 //# include "OperandInt32.hpp"
 # include <map>
 
+//class Operand<int>;
+//template <typename T>
+//class Operand;
 
 class FactoryOperand
 {
@@ -19,7 +23,13 @@ class FactoryOperand
 		IOperand		*make(eOperandType op, double val);
 		IOperand		*make(eOperandType op);
 		//IOperand		*make(std::string str);
+
 		static FactoryOperand	Factory;
+		static bool				compareInt32(IOperand *a, IOperand *b);
+		static bool				compareInt16(IOperand *a, IOperand *b);
+		static bool				compareInt8(IOperand *a, IOperand *b);
+		static bool				compareFloat(IOperand *a, IOperand *b);
+		static bool				compareDouble(IOperand *a, IOperand *b);
 
 	private:
 		IOperand			*makeInt32();
@@ -51,5 +61,7 @@ typedef IOperand* (FactoryOperand::*t_ope)();
 typedef IOperand* (FactoryOperand::*t_opestr)(std::string);
 typedef IOperand* (FactoryOperand::*t_opedouble)(double);
 
+
+//#include "Operand.tpp"
 
 #endif

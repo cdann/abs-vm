@@ -8,8 +8,6 @@
 # include <list>
 # include <string>
 
-
-
 class LineManager {
 
 	public:
@@ -24,7 +22,7 @@ class LineManager {
 		IOperand			*parseOperand();
 		std::string 		getLine() const;
 
-		//static LineManager	Manager;
+		//static FactoryOperand	Factor;
 
 	private:
 		static int				nline;
@@ -48,9 +46,13 @@ class LineManager {
 		void		sub();
 
 
+
+
+
 };
 
 typedef void (LineManager::*t_instruct)();
+typedef bool  (*t_cast)(IOperand *a, IOperand *b);
 //typedef IOperand* (FactoryOperand::*t_opestr)(std::string);
 
 std::ostream		&operator<<(std::ostream &, LineManager const &);
