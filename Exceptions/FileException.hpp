@@ -3,7 +3,7 @@
 
 # include <stdexcept>
 
-enum FILE_ERR { EXIT_ERR, FILENAME_ERR};
+enum FILE_ERR { EXIT_ERR = 0, FILENAME_ERR, VOID};
 
 
 class FileException: public std::exception

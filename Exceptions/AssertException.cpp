@@ -5,7 +5,7 @@
 
 const char* AssertException::what() const throw()
 {
-	std::string error = "Error : line " + LineManager::getNline() + ": The result of Assert is not the result expected.";
+	std::string error = "Assert Error : line " + LineManager::getNline() + ": The result of Assert is not the result expected.";
 	return ( error.c_str() );
 }
 

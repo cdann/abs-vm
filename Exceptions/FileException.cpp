@@ -4,17 +4,15 @@
 
 const char* FileException::what() const throw()
 {
-	std::string error = "Error : ";
-	switch(err)
-	{
-		case(FILENAME_ERR):
-			error += " can't find the file, check its name and its path.";
-			break;
-		case(EXIT_ERR):
-			error += " the exit instruction is missing.";
-			break;
-	}
-	return ( error.c_str() );
+
+	std::string text[] = {
+		"The exit instruction is missing.",
+		" Can't find the file, check its name and its path.",
+	};
+
+		std::string error = "File Error : " + text[err];
+		std::cout << error << std::endl;
+		return ( error.data() );
 }
 
 FileException::FileException(FILE_ERR e) throw() : std::exception()

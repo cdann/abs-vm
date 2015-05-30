@@ -5,22 +5,15 @@
 
 const char* OperandException::what() const throw()
 {
-	std::string error = "Error : line " + LineManager::getNline() + ": ";
-	switch(err)
-	{
-		case(MOD_ERR):
-			error += " modulo by 0.";
-			break;
-		case(DIV_ERR):
-			error += " division by 0.";
-			break;
-		case(OVER_ERR):
-			error += " overflow error.";
-			break;
-		case(UNDER_ERR):
-			error += " underflow error.";
-			break;
-	}
+	std::string text[] = {
+		" modulo by 0.",
+		" division by 0.",
+		" overflow error.",
+		" underflow error.",
+		" this type does not exist.",
+		" cannot use an empty value."
+	};
+	std::string error = "Operand Error : line " + LineManager::getNline() + ": "+= text[err];
 
 	return ( error.c_str() );
 }

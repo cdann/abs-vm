@@ -3,7 +3,7 @@
 
 # include <stdexcept>
 
-enum OP_ERR { MOD_ERR, DIV_ERR, OVER_ERR, UNDER_ERR};
+enum OP_ERR { MOD_ERR, DIV_ERR, OVER_ERR, UNDER_ERR, TYPE_ERR, VALUE_ERR};
 
 
 class OperandException: public std::exception
