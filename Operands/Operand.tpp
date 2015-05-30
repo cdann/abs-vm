@@ -52,8 +52,8 @@ class Operand : public IOperand
 		{
 			if (!ToolBox::isdigit(d, false))
 			{
-				std::cout << "FALSE";
-				throw SyntaxeException();
+				//std::cout << "@@@@@@" << d << std::endl;
+				throw SyntaxeException(ERR_SIMPLE);
 			}
 		}
 
@@ -110,10 +110,15 @@ class Operand : public IOperand
 			eOperandType t;
 			IOperand *ret;
 
+
 			d = ToolBox::toDouble(rhs.toString());
-			if (d == 0)
+				//std::cout << "pop" << d << rhs.toString() << *this;
+			if (this->value == 0)
+			{
+				//std::cout << "blaaaa";
 				throw OperandException(DIV_ERR);
-			d = this->value/ d;
+			}
+			d = d / this->value;
 			t = (rhs.getType() > this->type) ? rhs.getType() : this->type;
 			ret = FactoryOperand::Factory.make(t, d);
 			return ret;
@@ -126,9 +131,9 @@ class Operand : public IOperand
 			IOperand *ret;
 
 			d = atoi(rhs.toString().c_str());
-			if (d == 0)
+			if (this->value == 0)
 				throw OperandException(MOD_ERR);
-			d = static_cast<int>(this->value) % d;
+			d = d % static_cast<int>(this->value);
 			t = (rhs.getType() > this->type) ? rhs.getType() : this->type;
 			ret = FactoryOperand::Factory.make(t, d);
 			return ret;
@@ -187,7 +192,7 @@ class Operand : public IOperand
 
 			ss << val;
 			this->string = ss.str();
-			this->value = this->fromString(string);
+			this->value = static_cast<T>(val);
 		}
 
 		void	init(std::string val)

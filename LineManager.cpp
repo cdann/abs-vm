@@ -3,14 +3,17 @@
 #include "SyntaxeException.hpp"
 #include "StackException.hpp"
 #include "AssertException.hpp"
+#include "OperandException.hpp"
 #include <list>
 #include <vector>
 #include "ToolBox.hpp"
 
 
 //FactoryOperand	LineManager::Factor;
-int				LineManager::nline = 0;
-bool			LineManager::isOn = true;
+std::string				LineManager::line;
+std::list<std::string>		LineManager::args;
+int							LineManager::nline = 0;
+bool						LineManager::isOn = true;
 /*--------------------------------------------------------*/
 /*                       Canonique                        */
 /*--------------------------------------------------------*/
@@ -63,20 +66,28 @@ std::string 	LineManager::getNline()
 	return s;
 }
 
+bool			LineManager::getOn()
+{
+	return LineManager::isOn;
+}
+
+
 /*--------------------------------------------------------*/
 /*                       parsing                          */
 /*--------------------------------------------------------*/
 
 void 	LineManager::parseLine(std::string str)
 {
+	this->line = str;
 	t_instruct instr[] = {&LineManager::push, &LineManager::pop, &LineManager::mul, &LineManager::my_div, &LineManager::mod, &LineManager::print, &LineManager::my_exit, &LineManager::my_assert, &LineManager::dump, &LineManager::add, &LineManager::sub,};
-	std::string instr_n[] = {"push", "pop", "mul", "div", "mod", "print", "my_exit", "assert", "dump", "add", "sub"};
+	std::string instr_n[] = {"push", "pop", "mul", "div", "mod", "print", "exit", "assert", "dump", "add", "sub"};
 
 	LineManager::nline ++;
+	//std::cout << "bim >> " << std::endl;
 	this->args = ToolBox::split(str, ' ');
-	for(std::list<std::string>::iterator it = this->args.begin() ; it != this->args.end() ; it++ )
-		std::cout << *it << " // ";
-	std::cout  << std::endl;
+	//for(std::list<std::string>::iterator it = this->args.begin() ; it != this->args.end() ; it++ )
+	//	std::cout << *it << " // ";
+	//std::cout << args.size() << std::endl;
 	if (this->args.size() > 2 || this->args.size() == 0)
 		throw SyntaxeException();
 	for(int i = 0; i < 11; i++)
@@ -84,38 +95,58 @@ void 	LineManager::parseLine(std::string str)
 		if (this->args.front() == instr_n[i])
 		{
 			(this->*instr[i])();
+			return;
 		}
 	}
+	throw SyntaxeException(ERR_INSTR);
 }
 
 IOperand	*LineManager::parseOperand()
 {
 	//Int8(N)
-	this->args.pop_front();
-	std::string arg = this->args.front();
+
+	std::string arg = this->args.back();
+	this->args.pop_back();
 	size_t found = 0;
 	std::string part[2];
+
 	found = arg.find('(');
-
-	eOperandType type;
-	//IOperand	*ret;
-
-	if (arg[arg.size() - 1] == ')' && found != std::string::npos)
+	if (found != std::string::npos )
 	{
 		part[0] = arg.substr(0, found );
-		part[1] = arg.substr(found + 1, arg.size() - found -2);
-	}
-	//std::cout << ">>" << part[1] << "<<" << std::endl;
 
+		this->args.push_back(part[0]);
+		if (arg[arg.size() - 1] != ')')
+		{
+			part[1] = arg.substr(found, arg.size() - found);
+			this->args.push_back(part[1]);
+			//std::cout << "plouf";
+			throw SyntaxeException(ERR_VALUE);
+		}
+		part[1] = arg.substr(found + 1, arg.size() - found -2);
+		this->args.push_back(part[1]);
+	}
+	else
+	{
+		throw SyntaxeException(ERR_OPSYNT);
+	}
+	if (part[1].size() == 0)
+		throw OperandException(VALUE_ERR);
+
+	IOperand	*ret = NULL;
 	std::string instr[] = {"int8", "int16", "int32","float", "double"};
 	eOperandType instr_n[] = { INT8, INT16, INT32, FLOAT, DOUBLE };
+
+	std::cout << "{{" << part[0] << "}}" << std::endl;
 	for(int i = 0; i < 5; i++)
 	{
 		if (part[0] == instr[i])
-			type = instr_n[i];
+			ret = FactoryOperand::Factory.make(instr_n[i], part[1]);
 	}
+	if (ret == NULL)
+		throw SyntaxeException(ERR_OPSYNT);
 	//ret = FactoryOperand::Factory.make(INT8, "4");
-	return (FactoryOperand::Factory.make(type, part[1]));
+	return ret;
 }
 
 /*--------------------------------------------------------*/
@@ -129,9 +160,9 @@ void		LineManager::mul()
 	const IOperand *c;
 
 	if (this->stack->size() < 2)
-		throw StackException();
+		throw StackException(OPER_ERR);
 	if (this->args.size() > 1)
-		throw SyntaxeException();
+		throw SyntaxeException(ERR_OPOUT);
 	a = this->stack->top();
 	this->stack->pop();
 	b = this->stack->top();
@@ -147,9 +178,9 @@ void		LineManager::sub()
 	const IOperand *c;
 
 	if (this->stack->size() < 2)
-		throw StackException();
+		throw StackException(OPER_ERR);
 	if (this->args.size() > 1)
-		throw SyntaxeException();
+		throw SyntaxeException(ERR_OPOUT);
 	a = this->stack->top();
 	this->stack->pop();
 	b = this->stack->top();
@@ -165,9 +196,9 @@ void		LineManager::my_div()
 	const IOperand *c;
 
 	if (this->stack->size() < 2)
-		throw StackException();
+		throw StackException(OPER_ERR);
 	if (this->args.size() > 1)
-		throw SyntaxeException();
+		throw SyntaxeException(ERR_OPOUT);
 	a = this->stack->top();
 	this->stack->pop();
 	b = this->stack->top();
@@ -183,9 +214,9 @@ void		LineManager::mod()
 	const IOperand *c;
 
 	if (this->stack->size() < 2)
-		throw StackException();
+		throw StackException(OPER_ERR);
 	if (this->args.size() > 1)
-		throw SyntaxeException();
+		throw SyntaxeException(ERR_OPOUT);
 	a = this->stack->top();
 	this->stack->pop();
 	b = this->stack->top();
@@ -202,10 +233,15 @@ void		LineManager::add()
 	const IOperand *c;
 
 	if (this->stack->size() < 2)
-		throw StackException();
+	{
+		throw StackException(OPER_ERR);
+	}
 	if (this->args.size() > 1)
-		throw SyntaxeException();
-	//std::cout << "AVANr";
+	{
+
+		throw SyntaxeException(ERR_OPOUT);
+	}
+
 	a = this->stack->top();
 	this->stack->pop();
 	b = this->stack->top();
@@ -219,9 +255,9 @@ void		LineManager::dump()
 	const IOperand *a;
 
 	if (this->stack->size() < 1)
-		throw StackException();
+		throw StackException(OPER_ERR);
 	if (this->args.size() > 1)
-		throw SyntaxeException();
+		throw SyntaxeException(ERR_OPOUT);
 	for (MutantStack<const IOperand*>::iterator it = this->stack->begin(); it != this->stack->end(); it++)
 	{
 		a = *it;
@@ -236,27 +272,31 @@ void		LineManager::print()
 	const IOperand *a;
 
 	//std::cout <<"bammmm";
-
 	if (this->stack->size() < 1)
-		throw StackException();
+		throw StackException(OPER_ERR);
 	if (this->args.size() > 1)
 	{
-		throw SyntaxeException();
+		throw SyntaxeException(ERR_OPOUT);
 	}
 	a = this->stack->top();
-	std::cout << a->toString() << std::endl;
-			//write(1, "!" , 1);
+	double d = ToolBox::toDouble(a->toString());
+	std::cout << static_cast<char>(d) << std::endl;
+	//write(1, "!" , 1);
 }
 
 void		LineManager::my_exit()
 {
+	if (this->args.size() > 1)
+		throw SyntaxeException(ERR_OPOUT);
 	LineManager::isOn = false;
 }
 
 void		LineManager::pop()
 {
+	if (this->args.size() > 1)
+		throw SyntaxeException(ERR_OPOUT);
 	if (this->stack->size() < 1)
-		throw StackException();
+		throw StackException(POP_ERR);
 	this->stack->pop();
 }
 
@@ -266,7 +306,10 @@ void		LineManager::pop()
 
 void		LineManager::push()
 {
+	if (this->args.size() < 2)
+		throw SyntaxeException(ERR_OPMISS);
 	this->stack->push(parseOperand());
+	//std::cout << "&&" << this->stack->size() << std::endl;
 }
 
 
@@ -275,6 +318,8 @@ void		LineManager::my_assert()
 	int i = 0;
 	eOperandType func_n[] = {INT8, INT16, INT32, FLOAT, DOUBLE};
 	t_cast func[] = {&FactoryOperand::compareInt8, &FactoryOperand::compareInt16, &FactoryOperand::compareInt32, &FactoryOperand::compareFloat, &FactoryOperand::compareDouble};
+	if (this->args.size() < 2)
+		throw SyntaxeException(ERR_OPMISS);
 	IOperand* tmp = parseOperand();
 	IOperand* first = const_cast<IOperand*>(this->stack->top());
 

@@ -21,16 +21,17 @@ class LineManager {
 		void 				parseLine(std::string str);
 		IOperand			*parseOperand();
 		std::string 		getLine() const;
+		static bool 		getOn();
 
 		//static FactoryOperand	Factor;
+		static std::list<std::string> args;
+		static std::string				line;
 
 	private:
 		static int				nline;
 		static bool				isOn;
 
-		std::string				line;
 		MutantStack<const IOperand*>	*stack;
-		std::list<std::string> args;
 
 		bool		searchInstruct(std::string);
 		void		push();

@@ -1,6 +1,7 @@
 #include "FactoryOperand.hpp"
 #include <iostream>
 #include "Operand.tpp"
+#include "OperandException.hpp"
 
 
 FactoryOperand	FactoryOperand::Factory;
@@ -40,6 +41,7 @@ IOperand *FactoryOperand::make(eOperandType op)
 		if (op == instr_n[i])
 			return (this->*instr[i])();
 	}
+	throw OperandException(TYPE_ERR);
 	return NULL;
 }
 
@@ -55,6 +57,7 @@ IOperand *FactoryOperand::make(eOperandType op, std::string val)
 			return (this->*instr[i])(val);
 		}
 	}
+	throw OperandException(TYPE_ERR);
 	return NULL;
 }
 
@@ -67,8 +70,11 @@ IOperand *FactoryOperand::make(eOperandType op, double val)
 	for(int i = 0; i < 5; i++)
 	{
 		if (op == instr_n[i])
+		{
 			return (this->*instr[i])(val);
+		}
 	}
+	throw OperandException(TYPE_ERR);
 	return NULL;
 }
 

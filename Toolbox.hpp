@@ -2,12 +2,17 @@
 #define TOOLBOX_H
 
 # include "LineManager.hpp"
+# include <list>
 
 namespace ToolBox{
 	double						toDouble(std::string str);
 	std::list<std::string>	split(std::string str, char c);
 	void						trim(std::string & str);
 	bool						isdigit(std::string str, bool b);
+	bool						isexpo(std::string str, std::string::iterator & it, bool & e);
+	bool						isvirg(std::string str, std::string::iterator & it, bool & v, bool in);
+	bool						issign(std::string str, std::string::iterator  it ,bool in);
+	bool						isnumber(std::string::iterator  it);
 	bool						isonlyspace(std::string str);
 
 	template < typename T>

@@ -5,6 +5,7 @@
 # include <sstream>
 # include <string>
 # include <list>
+#include "FileException.hpp"
 
 class FileParser {
 
@@ -14,8 +15,11 @@ public:
 	FileParser(FileParser const &);
 	virtual ~FileParser();
 	void check();
+	void 	checkline(std::string &line);
 	int			getLine(std::string& li);
 	FileParser			&operator=(FileParser const &);
+	FILE_ERR			err;
+
 
 private:
 	std::list<std::string> lines;

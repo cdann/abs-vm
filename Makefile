@@ -6,22 +6,24 @@
 #    By: cdannapp <cdannapp@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2014/02/16 21:34:00 by cdannapp          #+#    #+#              #
-#    Updated: 2015/05/26 16:59:18 by cdannapp         ###   ########.fr        #
+#    Updated: 2015/05/27 15:44:33 by cdannapp         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = AbstractVM
+NAME = avm
 
-SRC =	ToolBox.cpp \
-		LineManager.cpp \
-		Operands/FactoryOperand.cpp \
-		FileParser.cpp \
-		Exceptions/OperandException.cpp \
-		Exceptions/SyntaxeException.cpp \
-		Exceptions/StackException.cpp \
-		Exceptions/AssertException.cpp \
-		Exceptions/FileException.cpp \
-		main.cpp
+SRC = ToolBox.cpp
+SRC += LineManager.cpp
+SRC += Operands/FactoryOperand.cpp
+SRC += FileParser.cpp
+SRC += Exceptions/OperandException.cpp
+SRC += Exceptions/SyntaxeException.cpp
+SRC += Exceptions/StackException.cpp
+SRC += Exceptions/AssertException.cpp
+SRC += Exceptions/FileException.cpp
+SRC += main.cpp
+
+HDR = Operands/Operand.tpp
 
 CFLAGS = -Wall -Werror -Wextra
 
@@ -31,8 +33,8 @@ INCLUDE = -I Operands -I Exceptions -I .
 
 all : $(NAME)
 
-%.o:%.cpp
-	clang++ -Wall -Wextra -Werror -c -o $@ $^ $(INCLUDE)
+%.o:%.cpp $(HDR)
+	clang++ -Wall -Wextra -Werror -c $< -o $@ $(INCLUDE)
 
 $(NAME): $(OBJ)
 	clang++ -o $(NAME) $(OBJ) $(INCLUDE)

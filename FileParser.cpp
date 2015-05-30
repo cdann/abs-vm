@@ -1,13 +1,15 @@
 #include "FileParser.hpp"
 #include "FileException.hpp"
+#include "ToolBox.hpp"
 #include <fstream>
 #include <string>
 #include <iostream>
 
 FileParser::FileParser() {
 	std::string 	buffer;
-	bool			e;
+	bool			e = 0;
 
+	this->err = VOID;
 	while (getline(std::cin, buffer) && buffer != ";;")
 	{
 		this->lines.push_back(buffer);
@@ -15,22 +17,25 @@ FileParser::FileParser() {
 			e = true;
 	}
 	if (!e)
-		throw FileException(EXIT_ERR);
+		this->err = EXIT_ERR;
+	std::cout << std::endl << "_____________________" << "AVM" << "_____________________" << std::endl;
+
 }
 
 FileParser::FileParser(char *f) {
 	//std::string 	file(f);
 	//std::ifstream	filesrc;
 	std::string 	buffer;
-	bool 	e;
+	bool 	e = 0;
 	//std::cout << "<< |" << f << "|" << std::endl;
 
+	this->err = VOID;
 	std::ifstream filesrc(f, std::ios::in);
 	if (filesrc)
 	{
-	//std::cout<< "bim";
 		while (getline(filesrc, buffer))
 		{
+			this->checkline(buffer);
 			if (buffer[0] != '\0' && buffer[0] != ';')
 			{
 				this->lines.push_back(buffer);
@@ -41,11 +46,26 @@ FileParser::FileParser(char *f) {
 		filesrc.close();
 	}
 	else
-		throw FileException(FILENAME_ERR);
-	if (!e)
-		throw FileException(EXIT_ERR);
+	{
+	//std::cout<< "buum" << FILENAME_ERR << "    ";
+		this->err = FILENAME_ERR;
+
+	}
+		//throw FileException(FILENAME_ERR);
+	if (!e && this->err != FILENAME_ERR)
+		this->err = EXIT_ERR;
 }
 
+void FileParser::checkline(std::string &line) {
+	size_t found = 0;
+
+	if ((found = line.find(";")) != std::string::npos)
+	{
+		line = line.substr(0, found);
+	}
+	ToolBox::trim(line);
+	//std::cout << "@@@" << line;
+}
 
 FileParser::FileParser(FileParser const &src) {
 	*this = src;
