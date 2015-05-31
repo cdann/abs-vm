@@ -3,7 +3,7 @@
 
 # include <stdexcept>
 
-enum SYNT_ERR { ERR_INSTR, ERR_OPSYNT, ERR_OPMISS, ERR_OPOUT, ERR_DIGIT, ERR_SIMPLE, ERR_VALUE};
+enum SYNT_ERR { ERR_INSTR, ERR_OPSYNT, ERR_OPMISS, ERR_OPOUT, ERR_DIGIT, ERR_VALUE};
 
 
 class SyntaxeException: public std::exception
@@ -14,6 +14,8 @@ class SyntaxeException: public std::exception
 		SyntaxeException(SYNT_ERR) throw();
 		SyntaxeException(SyntaxeException const & src) throw();
 		SyntaxeException		&operator=(SyntaxeException const &src);
+		static bool getverbose();
+		static void setverbose();
 		virtual ~SyntaxeException() throw();
 
 	private:

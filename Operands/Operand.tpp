@@ -53,7 +53,7 @@ class Operand : public IOperand
 			if (!ToolBox::isdigit(d, false))
 			{
 				//std::cout << "@@@@@@" << d << std::endl;
-				throw SyntaxeException(ERR_SIMPLE);
+				throw SyntaxeException(ERR_VALUE);
 			}
 		}
 

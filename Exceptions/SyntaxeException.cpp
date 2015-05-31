@@ -3,35 +3,47 @@
 #include <iostream>
 #include <string>
 
-bool SyntaxeException::verbose = true;
+bool SyntaxeException::verbose = false;
 
 const char* SyntaxeException::what() const throw()
 {
+	std::list<std::string> list = LineManager::getArgs();
 	std::string arg ;
 	if (err == ERR_OPSYNT )
-		LineManager::args.pop_front();
+		list.pop_front();
 	if (err == ERR_VALUE)
-		arg = LineManager::args.back();
+		arg = list.back();
 	else
-		arg = LineManager::args.front();
-	std::string line = LineManager::line;
+		arg = list.front();
+	std::string line = LineManager::getLine();
 	std::string text[] = {
 		" The instruction\033[1m " + arg + " \33[0m is not known.",
 		" The type\033[1m " + arg + "\33[0m doesn't exist.",
 		" The value to use is missing.",
 		" The instruction\033[1m " + arg +"\33[0m needs no value.",
 		" This is not a correct number\033[1m " + arg + "\33[0m",
-		" syntaxe error : " + line,
 		" The value\033[1m " + arg +"\33[0m in the operand is not in a valid format .",
 	};
-
-	std::string error = "Syntaxe Error : line " + LineManager::getNline() + ": " + text[err];
-	std::cout << "ouou" <<SyntaxeException::verbose << std::endl;
+	std::string error = "\033[1;4mSyntaxe Error\33[0m : line " + LineManager::getNline() + ": " + text[err];
+	if (err == ERR_OPOUT )
+		arg = list.back();
 	if ( SyntaxeException::verbose == true)
 		error += "\n" + SyntaxeException::show_line(line, arg);
 
 	return ( error.c_str() );
 }
+
+bool		SyntaxeException::getverbose()
+{
+	return SyntaxeException::verbose;
+}
+
+void		SyntaxeException::setverbose()
+{
+	SyntaxeException::verbose = true;
+}
+
+
 
 SyntaxeException::SyntaxeException() throw() : std::exception()
 {

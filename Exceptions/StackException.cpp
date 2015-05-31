@@ -1,4 +1,5 @@
 #include "StackException.hpp"
+#include "SyntaxeException.hpp"
 #include "LineManager.hpp"
 #include <iostream>
 #include <string>
@@ -9,7 +10,9 @@ const char* StackException::what() const throw()
 		"Not enought values on the stack to make this operation.",
 		"Cannot pop on an empty stack.",
 	};
-	std::string error = "Stack Error : line " + LineManager::getNline() + ": "+= text[err];
+	std::string error = "\033[1;4mStack Error\033[0m : line " + LineManager::getNline() + ": "+= text[err];
+	if ( SyntaxeException::getverbose() == true)
+		error += "\n\033[35m" + LineManager::getLine()+ "\033[0m\n";
 
 	return ( error.c_str() );
 }

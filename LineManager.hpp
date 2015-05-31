@@ -20,16 +20,19 @@ class LineManager {
 		LineManager			&operator=(LineManager const &);
 		void 				parseLine(std::string str);
 		IOperand			*parseOperand();
-		std::string 		getLine() const;
-		static bool 		getOn();
-
-		//static FactoryOperand	Factor;
-		static std::list<std::string> args;
-		static std::string				line;
+		/*
+		statics getter/setter
+		 */
+		static std::string 				getLine();
+		static std::list<std::string> 	getArgs();
+		static bool 					getOn();
+		static void 					setParser();
 
 	private:
-		static int				nline;
-		static bool				isOn;
+		static int						nline;
+		static bool						isOn;
+		static std::list<std::string>	args;
+		static std::string				line;
 
 		MutantStack<const IOperand*>	*stack;
 

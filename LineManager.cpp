@@ -48,12 +48,17 @@ std::ostream	&operator<<(std::ostream &o, LineManager const &rhs) {
 }
 
 /*--------------------------------------------------------*/
-/*                        getter                          */
+/*                      getter/setter                     */
 /*--------------------------------------------------------*/
 
-std::string 	LineManager::getLine() const
+std::string 	LineManager::getLine()
 {
-	return this->line;
+	return LineManager::line;
+}
+
+std::list<std::string> 	LineManager::getArgs()
+{
+	return LineManager::args;
 }
 
 std::string 	LineManager::getNline()
@@ -69,6 +74,11 @@ std::string 	LineManager::getNline()
 bool			LineManager::getOn()
 {
 	return LineManager::isOn;
+}
+
+void		LineManager::setParser()
+{
+	std::cout << "ok super parser"<< std::endl;
 }
 
 
@@ -137,7 +147,6 @@ IOperand	*LineManager::parseOperand()
 	std::string instr[] = {"int8", "int16", "int32","float", "double"};
 	eOperandType instr_n[] = { INT8, INT16, INT32, FLOAT, DOUBLE };
 
-	std::cout << "{{" << part[0] << "}}" << std::endl;
 	for(int i = 0; i < 5; i++)
 	{
 		if (part[0] == instr[i])

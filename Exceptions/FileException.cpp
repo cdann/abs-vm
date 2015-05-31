@@ -1,4 +1,5 @@
 #include "FileException.hpp"
+#include "SyntaxeException.hpp"
 #include <iostream>
 #include <string>
 
@@ -10,7 +11,8 @@ const char* FileException::what() const throw()
 		" Can't find the file, check its name and its path.",
 	};
 
-		std::string error = "File Error : " + text[err];
+		std::string error = "\033[1;4mFile Error\033[0m : " + text[err];
+
 		std::cout << error << std::endl;
 		return ( error.data() );
 }

@@ -18,7 +18,7 @@ FileParser::FileParser() {
 	}
 	if (!e)
 		this->err = EXIT_ERR;
-	std::cout << std::endl << "_____________________" << "AVM" << "_____________________" << std::endl;
+	std::cout << std::endl << "_____________________" << "AVM" << "_____________________" << std::endl<< std::endl;
 
 }
 
