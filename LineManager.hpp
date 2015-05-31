@@ -31,6 +31,7 @@ class LineManager {
 	private:
 		static int						nline;
 		static bool						isOn;
+		static bool						Parser;
 		static std::list<std::string>	args;
 		static std::string				line;
 
@@ -49,9 +50,7 @@ class LineManager {
 		void		add();
 		void		sub();
 
-
-
-
+		void 		reformLine(std::string & str);
 
 };
 

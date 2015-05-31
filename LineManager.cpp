@@ -14,6 +14,8 @@ std::string				LineManager::line;
 std::list<std::string>		LineManager::args;
 int							LineManager::nline = 0;
 bool						LineManager::isOn = true;
+bool						LineManager::Parser = false;
+
 /*--------------------------------------------------------*/
 /*                       Canonique                        */
 /*--------------------------------------------------------*/
@@ -78,7 +80,8 @@ bool			LineManager::getOn()
 
 void		LineManager::setParser()
 {
-	std::cout << "ok super parser"<< std::endl;
+//	std::cout << "blabla";
+	LineManager::Parser = true;
 }
 
 
@@ -86,20 +89,73 @@ void		LineManager::setParser()
 /*                       parsing                          */
 /*--------------------------------------------------------*/
 
+void 	LineManager::reformLine(std::string & str)
+{
+	size_t found1 = 0;
+	size_t found2 = 0;
+	std::string s;
+	std::list<std::string> st;
+	char car[] = {' ', '\t'};
+
+	found1 = str.find('(');
+	if (found1 != std::string::npos)
+	{
+		st = ToolBox::split(str.substr(0, found1 - 1), car);
+	}
+	else
+		ToolBox::trim(str);
+	//for(std::list<std::string>::iterator it = st.begin() ; it != st.end() ; it++ )
+	//{
+	//	std::cout << "+" << *it << "|" << std::endl;
+	//}
+	found2 = str.find(')');
+	if (found2 != std::string::npos && st.size() == 2)
+	{
+		s = str.substr(found1+1, found2 - found1 - 1);
+		ToolBox::trim(s);
+		str = st.front() + " " + st.back() + "(" + s + ")";
+	}
+
+
+	std::cout<< "8888|" << str << "|" << std::endl ;
+
+}
+
 void 	LineManager::parseLine(std::string str)
 {
 	this->line = str;
 	t_instruct instr[] = {&LineManager::push, &LineManager::pop, &LineManager::mul, &LineManager::my_div, &LineManager::mod, &LineManager::print, &LineManager::my_exit, &LineManager::my_assert, &LineManager::dump, &LineManager::add, &LineManager::sub,};
 	std::string instr_n[] = {"push", "pop", "mul", "div", "mod", "print", "exit", "assert", "dump", "add", "sub"};
-
+	//std::cout << "plouf";
 	LineManager::nline ++;
 	//std::cout << "bim >> " << std::endl;
+	if (LineManager::Parser == true)
+		this->reformLine(str);
 	this->args = ToolBox::split(str, ' ');
-	//for(std::list<std::string>::iterator it = this->args.begin() ; it != this->args.end() ; it++ )
-	//	std::cout << *it << " // ";
+	//if (LineManager::Parser == true)
+	//{
+	//	for(std::list<std::string>::iterator it = this->args.begin() ; it != this->args.end() ; it++ )
+	//	{
+	//		ToolBox::trim(*it);
+//
+	//	}
+	//		this->args.remove("");
+	//	for(std::list<std::string>::iterator it = this->args.begin() ; it != this->args.end() ; it++ )
+	//	{
+	//		std::cout<< "|" << *it ;
+	//	}
+	//}
+	//(this->args.front() != "push")? std::cout << "KO " : std::cout << "OK" << this->args.size();
+
+
+	//	std::cout <<  << " // ";
 	//std::cout << args.size() << std::endl;
+	//std::cout << "{" <<this->args.back() << "}" << std::endl;
 	if (this->args.size() > 2 || this->args.size() == 0)
+	{
 		throw SyntaxeException();
+	}
+
 	for(int i = 0; i < 11; i++)
 	{
 		if (this->args.front() == instr_n[i])
@@ -108,6 +164,7 @@ void 	LineManager::parseLine(std::string str)
 			return;
 		}
 	}
+
 	throw SyntaxeException(ERR_INSTR);
 }
 
@@ -124,6 +181,11 @@ IOperand	*LineManager::parseOperand()
 	if (found != std::string::npos )
 	{
 		part[0] = arg.substr(0, found );
+		//if (LineManager::Parser == true)
+		//{
+		//	ToolBox::trim(part[0]);
+		//	std::cout<< "|" << part[0] <<"|";
+		//}
 
 		this->args.push_back(part[0]);
 		if (arg[arg.size() - 1] != ')')
@@ -142,7 +204,7 @@ IOperand	*LineManager::parseOperand()
 	}
 	if (part[1].size() == 0)
 		throw OperandException(VALUE_ERR);
-
+	std::cout << "#####"<< part[1] <<std::endl;
 	IOperand	*ret = NULL;
 	std::string instr[] = {"int8", "int16", "int32","float", "double"};
 	eOperandType instr_n[] = { INT8, INT16, INT32, FLOAT, DOUBLE };

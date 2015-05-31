@@ -41,9 +41,16 @@ class Operand : public IOperand
 
 		void  checkLimit(double d)
 		{
-			//std::cout << this->type << " " << static_cast<double>(std::numeric_limits<T>::min()) << " <-> " << static_cast<double>(std::numeric_limits<T>::max()) << std::endl;
+			std::cout << d << " " << static_cast<double>(std::numeric_limits<T>::min()) << " <-> " << static_cast<double>(std::numeric_limits<T>::max()) << std::endl;
 			if (d < std::numeric_limits<T>::min())
+			{
+				std::cout << "ici";
+				//float e = -1.17549e80;
+				//e += 0.1;
+				if (-0.001 < 1.17549e-38)
+					std::cout << 1.17549e-38;
 				throw OperandException(UNDER_ERR);
+			}
 			if (d > std::numeric_limits<T>::max())
 				throw OperandException(OVER_ERR);
 		}

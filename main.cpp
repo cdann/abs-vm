@@ -3,7 +3,7 @@
 #include "SyntaxeException.hpp"
 #include "FileParser.hpp"
 #include <iostream>
-
+# include <cfloat>
 //typedef void (*t_ope)(void);
 
 bool	put_option(int argc, char  *argv[])
@@ -14,7 +14,7 @@ bool	put_option(int argc, char  *argv[])
 	//void (*ft_opt)(void);
 	//void (*pointeur_4[])() = {SyntaxeException::setverbose};
 	std::string opts[] ={"-v", "-p"};
-	void (*ft_opt[])() = {SyntaxeException::setverbose, LineManager::setParser};
+	void (*ft_opt[])() = {&SyntaxeException::setverbose, &LineManager::setParser};
 
 	while (j < argc - 1)
 	{
@@ -46,6 +46,9 @@ int main(int argc, char  **argv)
 		std::string l;
 		FileParser *file;
 		LineManager TheBoss;
+		//float r = 10e-15888880;
+		//r = r + 0.0002e20;
+		std::cout << "::::" <<DBL_MAX;
 
 		if (argc == 1)
 			file = new  FileParser();

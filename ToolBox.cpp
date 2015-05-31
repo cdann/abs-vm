@@ -14,25 +14,97 @@ double   ToolBox::toDouble(std::string str){
 	return d;
 }
 
+
+size_t ToolBox::find(std::string s, char *ch, size_t f)
+{
+	std::string tab(ch);
+	size_t	min = s.size();
+	size_t	found = 0;
+	size_t		i = 0;
+	while (i < tab.size())
+	{
+		found =s.find(tab[i], f);
+		if (found != std::string::npos && found < min)
+			min = found;
+		++i;
+	}
+	if (min == s.size())
+		return std::string::npos;
+	std::cout << "min: "<<min << std::endl;
+	return min;
+}
+
+
 std::list<std::string> ToolBox::split(std::string str, char c)
 {
 	std::list<std::string>	ret;
+	//std::string				st;
 	size_t							s = 0;
 	size_t							found = 0;
 
 	found = str.find(c, found);
 	while (found != std::string::npos)
 	{
-		if (found != 0)
+		//std::cout << "&&&" << str.substr(found, str.size() - found) << "|" << std::endl;
+
+		if (found != 0 && found != s)
 		{
 			//std::cout << str.size() << "tac >> "<< found << std::endl;
 			ret.push_back(str.substr(s, found - s));
-			s = found + 1;
 		}
+		//else
+		//	std::cout << "*|" << str.substr(0, found) << "|*" <<std::endl;
+		s = found + 1;
+			//std::cout << "("<<str<<")" <<std::endl;
 
-		found = str.find(c, found + 1);
+		found = str.find(c, s);
+		//while (found + 1 < str.size() && str[found + 1] == c)
+		//	++found;
 	}
-	ret.push_back (str.substr(s, str.size() - s));
+	//std::cout << "&&&" << str.substr(s, str.size() - found) << "|" << std::endl;
+	if (s != str.size())
+	{
+		//std::cout << "-|" << str.substr(s, str.size() - s) << "|-" <<std::endl;
+		ret.push_back (str.substr(s, str.size() - s));
+	}
+	//std::cout << str << "$$$$"<< ret.size();
+	return ret;
+}
+
+std::list<std::string> ToolBox::split(std::string str, char *c)
+{
+	std::list<std::string>	ret;
+	//std::string				st;
+	size_t							s = 0;
+	size_t							found = 0;
+
+	//found = str.find(c, found);
+	found = find(str, c, found);
+	while (found != std::string::npos)
+	{
+		//std::cout << "&&&" << str.substr(found, str.size() - found) << "|" << std::endl;
+
+		if (found != 0 && found != s)
+		{
+			//std::cout << str.size() << "tac >> "<< found << std::endl;
+			ret.push_back(str.substr(s, found - s));
+		}
+		//else
+		//	std::cout << "*|" << str.substr(0, found) << "|*" <<std::endl;
+		s = found + 1;
+			std::cout << "("<<ret.back()<<")" <<std::endl;
+		found = find(str, c, s);
+		//found = str.find(c, s);
+		//while (found + 1 < str.size() && str[found + 1] == c)
+		//	++found;
+	}
+	//std::cout << ">>>" << str.substr(s, str.size() - found) << "|" << std::endl;
+	if (s != str.size())
+	{
+		//std::cout << "-|" << str.substr(s, str.size() - s) << "|-" <<std::endl;
+		ret.push_back (str.substr(s, str.size() - s));
+	}
+	//std::cout << str << "$$$$"<< ret.size();
 	return ret;
 }
 
