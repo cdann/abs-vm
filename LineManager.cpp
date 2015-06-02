@@ -100,16 +100,15 @@ void 	LineManager::reformLine(std::string & str)
 	char car[] = {' ', '\t'};
 
 	found1 = str.find('(');
-	s = str;
 	if (found1 != std::string::npos)
 	{
-		st = ToolBox::split(str.substr(0, found1), car);
+		st = ToolBox::split(str.substr(0, found1 - 1), car);
 	}
 	else
 		ToolBox::trim(str);
 	//for(std::list<std::string>::iterator it = st.begin() ; it != st.end() ; it++ )
 	//{
-	//	//std::cout << "+" << *it << "|" << std::endl;
+	//	std::cout << "+" << *it << "|" << std::endl;
 	//}
 	found2 = str.find(')');
 	if (found2 != std::string::npos && st.size() == 2)
@@ -118,22 +117,9 @@ void 	LineManager::reformLine(std::string & str)
 		ToolBox::trim(s);
 		str = st.front() + " " + st.back() + "(" + s + ")";
 	}
-	//else
-	//{
-	//	str = "";
-	//	for(std::list<std::string>::iterator it = st.begin() ; it != st.end() ; it++ )
-	//	{
-	//		if (it != st.begin())
-	//			str += " ";
-	//		str += *it ;
-	//	}
-	//	str += " " + s.substr(found1, str.size());
-	//}
-	//type ( value )
-
-	//std::cout<< ">>>>|" << str << "|" << std::endl ;
 
 }
+
 
 void 	LineManager::parseLine(std::string str, bool err)
 {
@@ -168,9 +154,8 @@ void 	LineManager::parseLine(std::string str, bool err)
 	//std::cout << "{" <<this->args.back() << "}" << std::endl;
 	if (this->args.size() > 2 || this->args.size() == 0)
 	{
-		throw SyntaxeException(ERR_INSTRSYNT);
+		throw SyntaxeException();
 	}
-	//std::cout << "^^" << this->args.front() << "|" <<std::endl;
 
 	for(int i = 0; i < 11; i++)
 	{
@@ -221,7 +206,6 @@ IOperand	*LineManager::parseOperand()
 	}
 	if (part[1].size() == 0)
 		throw OperandException(VALUE_ERR);
-	//std::cout << "#####"<< part[1] <<std::endl;
 	IOperand	*ret = NULL;
 	std::string instr[] = {"int8", "int16", "int32","float", "double"};
 	eOperandType instr_n[] = { INT8, INT16, INT32, FLOAT, DOUBLE };

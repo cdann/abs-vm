@@ -4,7 +4,6 @@
 #include "FileParser.hpp"
 #include <iostream>
 # include <list>
-//typedef void (*t_ope)(void);
 
 void usage()
 {
@@ -20,6 +19,7 @@ std::list<std::string>	put_option(int argc, char  *argv[])
 	int		j = 1;
 	std::string opts[] ={"-v", "-p", "-h"};
 	void (*ft_opt[])() = {&SyntaxeException::setverbose, &LineManager::setParser, &usage};
+
 
 	while (j < argc)
 	{

@@ -30,7 +30,6 @@ size_t ToolBox::find(std::string s, char *ch, size_t f)
 	}
 	if (min == s.size())
 		return std::string::npos;
-	//std::cout << "min: "<<min << std::endl;
 	return min;
 }
 
@@ -92,7 +91,6 @@ std::list<std::string> ToolBox::split(std::string str, char *c)
 		//else
 		//	std::cout << "*|" << str.substr(0, found) << "|*" <<std::endl;
 		s = found + 1;
-			//std::cout << "("<<ret.back()<<")" <<std::endl;
 		found = find(str, c, s);
 		//found = str.find(c, s);
 		//while (found + 1 < str.size() && str[found + 1] == c)

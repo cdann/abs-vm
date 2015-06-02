@@ -41,7 +41,6 @@ class Operand : public IOperand
 
 		void  checkLimit(double d)
 		{
-			//std::cout << d << " " << static_cast<double>(std::numeric_limits<T>::min()) << " <-> " << static_cast<double>(std::numeric_limits<T>::max()) << std::endl;
 			if (d < std::numeric_limits<T>::min())
 			{
 				throw OperandException(UNDER_ERR);
@@ -54,12 +53,11 @@ class Operand : public IOperand
 		{
 			if (!ToolBox::isdigit(d, false))
 			{
-				//std::cout << "@@@@@@" << d << std::endl;
 				throw SyntaxeException(ERR_DIGIT);
 			}
 		}
 
-		bool  operator==(Operand<T> const & rhs ) const // Sum
+		bool  operator==(Operand<T> const & rhs ) const // compare
 		{
 			if (this->value == rhs.value)
 				return true;
