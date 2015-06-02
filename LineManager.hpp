@@ -18,7 +18,7 @@ class LineManager {
 		virtual ~LineManager();
 
 		LineManager			&operator=(LineManager const &);
-		void 				parseLine(std::string str);
+		void 				parseLine(std::string str, bool b);
 		IOperand			*parseOperand();
 		/*
 		statics getter/setter
@@ -29,11 +29,13 @@ class LineManager {
 		static void 					setParser();
 
 	private:
-		static int						nline;
-		static bool						isOn;
-		static std::list<std::string>	args;
-		static std::string				line;
+		static int						nline;//nombre de ligne
+		static bool						isOn;//continue ou non
+		static bool						Parser;//option -p
+		static std::list<std::string>	args;//les differentes parties de la ligne
+		static std::string				line;//la ligne
 
+		bool							noPrint;
 		MutantStack<const IOperand*>	*stack;
 
 		bool		searchInstruct(std::string);
@@ -49,9 +51,7 @@ class LineManager {
 		void		add();
 		void		sub();
 
-
-
-
+		void 		reformLine(std::string & str);
 
 };
 

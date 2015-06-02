@@ -11,7 +11,7 @@ class FileParser {
 
 public:
 	FileParser();
-	FileParser(char *file);
+	FileParser(const char *file);
 	FileParser(FileParser const &);
 	virtual ~FileParser();
 	void check();

@@ -2,8 +2,8 @@
 # define SYNTEXCEPT_H
 
 # include <stdexcept>
-
-enum SYNT_ERR { ERR_INSTR, ERR_OPSYNT, ERR_OPMISS, ERR_OPOUT, ERR_DIGIT, ERR_VALUE};
+# include <list>
+enum SYNT_ERR { ERR_INSTR, ERR_OPSYNT, ERR_OPMISS, ERR_OPOUT, ERR_DIGIT, ERR_VALUE, ERR_INSTRSYNT};
 
 
 class SyntaxeException: public std::exception
@@ -21,7 +21,8 @@ class SyntaxeException: public std::exception
 	private:
 		static bool			verbose;
 		SYNT_ERR err;
-		static std::string		show_line(std::string line, std::string piece);
+		std::list<std::string> list;
+		std::string		show_line(std::string line, std::string piece) const;
 
 };
 

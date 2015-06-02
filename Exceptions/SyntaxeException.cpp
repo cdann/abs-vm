@@ -11,8 +11,10 @@ const char* SyntaxeException::what() const throw()
 	std::string arg ;
 	if (err == ERR_OPSYNT )
 		list.pop_front();
-	if (err == ERR_VALUE)
+	if (err == ERR_VALUE || err == ERR_DIGIT)
+	{
 		arg = list.back();
+	}
 	else
 		arg = list.front();
 	std::string line = LineManager::getLine();
@@ -23,13 +25,15 @@ const char* SyntaxeException::what() const throw()
 		" The instruction\033[1m " + arg +"\33[0m needs no value.",
 		" This is not a correct number\033[1m " + arg + "\33[0m",
 		" The value\033[1m " + arg +"\33[0m in the operand is not in a valid format .",
+		" The instruction is not in a correct format: \033[1m" + line + "\033[0m",
 	};
 	std::string error = "\033[1;4mSyntaxe Error\33[0m : line " + LineManager::getNline() + ": " + text[err];
 	if (err == ERR_OPOUT )
 		arg = list.back();
 	if ( SyntaxeException::verbose == true)
-		error += "\n" + SyntaxeException::show_line(line, arg);
+		error += "\n" + this->show_line(line, arg);
 
+	//std::cerr << error.c_str();
 	return ( error.c_str() );
 }
 
@@ -65,26 +69,40 @@ SyntaxeException			& SyntaxeException::operator=(SyntaxeException const &src)  {
 		return (*this);
 }
 
-std::string			SyntaxeException::show_line(std::string line, std::string piece)  {
-	//std::cout << LineManager::line << std::endl;
+std::string			SyntaxeException::show_line(std::string line, std::string piece)  const{
+//	std::cout << "LineManager::line" << std::endl;
 	size_t found;
 	std::string st2;
 
 	found = line.find(piece);
 			//std::cout << piece << " ** " << line << std::endl;
+
 	if (found != std::string::npos)
 	{
-		st2 = "\033[33;7;1m" + piece + "\033[0m";
-			//std::cout << "rthyth";
-			line.replace(found, piece.size(), st2);
-		st2 = line + "\n";
-		//std::cout << line << std::endl;
-		for (size_t i = 0; i < found; i++)
+
+		if (err == ERR_INSTRSYNT)
 		{
-			st2 += " ";
+			std::cout << "str (" << found+piece.size() << ", " << line.size() - found - piece.size() << ")";
+			std::string s = line.substr(found+piece.size(), line.size() - found - piece.size());
+			st2 = "\033[33;7;1m" + s + "\033[0m";
+			line.replace(found + piece.size(), s.size(),  st2);
+			st2 = line + "\n";
 		}
-			st2 += "^\n";
+		else
+		{
+			st2 = "\033[33;7;1m" + piece + "\033[0m";
+				//std::cout << "rthyth";
+				line.replace(found, piece.size(), st2);
+			st2 = line + "\n";
+			//std::cout << line << std::endl;
+			for (size_t i = 0; i < found; i++)
+			{
+				st2 += " ";
+			}
+				st2 += "^\n";
+		}
 	}
+
 	return st2;
 
 }

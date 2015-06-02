@@ -12,17 +12,20 @@ FileParser::FileParser() {
 	this->err = VOID;
 	while (getline(std::cin, buffer) && buffer != ";;")
 	{
-		this->lines.push_back(buffer);
-		if (buffer == "exit")
-			e = true;
+		this->checkline(buffer);
+		if (!buffer.empty() && buffer[0] != ';')
+		{
+			this->lines.push_back(buffer);
+			if (buffer == "exit")
+				e = true;
+		}
 	}
 	if (!e)
 		this->err = EXIT_ERR;
-	std::cout << std::endl << "_____________________" << "AVM" << "_____________________" << std::endl<< std::endl;
 
 }
 
-FileParser::FileParser(char *f) {
+FileParser::FileParser(const char *f) {
 	//std::string 	file(f);
 	//std::ifstream	filesrc;
 	std::string 	buffer;
@@ -36,7 +39,7 @@ FileParser::FileParser(char *f) {
 		while (getline(filesrc, buffer))
 		{
 			this->checkline(buffer);
-			if (buffer[0] != '\0' && buffer[0] != ';')
+			if (!buffer.empty() && buffer[0] != ';')
 			{
 				this->lines.push_back(buffer);
 				if (buffer == "exit")

@@ -41,9 +41,11 @@ class Operand : public IOperand
 
 		void  checkLimit(double d)
 		{
-			//std::cout << this->type << " " << static_cast<double>(std::numeric_limits<T>::min()) << " <-> " << static_cast<double>(std::numeric_limits<T>::max()) << std::endl;
+			//std::cout << d << " " << static_cast<double>(std::numeric_limits<T>::min()) << " <-> " << static_cast<double>(std::numeric_limits<T>::max()) << std::endl;
 			if (d < std::numeric_limits<T>::min())
+			{
 				throw OperandException(UNDER_ERR);
+			}
 			if (d > std::numeric_limits<T>::max())
 				throw OperandException(OVER_ERR);
 		}
@@ -53,7 +55,7 @@ class Operand : public IOperand
 			if (!ToolBox::isdigit(d, false))
 			{
 				//std::cout << "@@@@@@" << d << std::endl;
-				throw SyntaxeException(ERR_VALUE);
+				throw SyntaxeException(ERR_DIGIT);
 			}
 		}
 
@@ -299,6 +301,18 @@ Operand<float>::Operand() : precision(32), type(FLOAT) {
 }
 
 template <>
+void  Operand<float>::checkLimit(double d)
+{
+	//std::cout << d << " " << static_cast<double>(std::numeric_limits<float>::min()) << " <-> " << static_cast<double>(std::numeric_limits<float>::max()) << std::endl;
+	if (d < 0)
+		d *= -1;
+	if (d < std::numeric_limits<float>::min())
+		throw OperandException(UNDER_ERR);
+	if (d > std::numeric_limits<float>::max())
+		throw OperandException(OVER_ERR);
+}
+
+template <>
 Operand<float>::Operand(double val) : precision(32), type(FLOAT)
 {
 	this->init(val);
@@ -320,7 +334,10 @@ template <>
 void  Operand<float>::checkDigit(std::string d)
 {
 	if (!ToolBox::isdigit(d, 1))
-		throw SyntaxeException();
+	{
+//		std::cout << "PLAF";
+		throw SyntaxeException(ERR_DIGIT);
+	}
 }
 
 
@@ -342,6 +359,18 @@ Operand<double>::Operand(double val) : precision(64), type(DOUBLE)
 }
 
 template <>
+void  Operand<double>::checkLimit(double d)
+{
+	//std::cout << d << " " << static_cast<double>(std::numeric_limits<double>::min()) << " <-> " << static_cast<double>(std::numeric_limits<double>::max()) << std::endl;
+	if (d < 0)
+		d *= -1;
+	if (d < std::numeric_limits<double>::min())
+		throw OperandException(UNDER_ERR);
+	if (d > std::numeric_limits<double>::max())
+		throw OperandException(OVER_ERR);
+}
+
+template <>
 Operand<double>::Operand(std::string val) : precision(64), type(DOUBLE)
 {
 	this->init(val);
@@ -357,7 +386,7 @@ template <>
 void  Operand<double>::checkDigit(std::string d)
 {
 	if (!ToolBox::isdigit(d, 1))
-		throw SyntaxeException();
+		throw SyntaxeException(ERR_DIGIT);
 }
 
 #endif
